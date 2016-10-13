@@ -1,3 +1,3 @@
-module ChangelogFormatter
+class ChangelogFormatter
   VERSION = "0.1.0"
 end
