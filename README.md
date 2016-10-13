@@ -1,8 +1,8 @@
 # ChangelogFormatter
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/changelog_formatter`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+TODO:
+- put helpers into the class
+- better documentation
 
 ## Installation
 
@@ -22,7 +22,83 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### The changelog
+
+### Rails
+
+Controller:
+
+``` ruby
+@changelog = ChangelogFormatter.to_a
+```
+
+Helper
+
+``` ruby
+def changelog_icon_for_type(type)
+  capture_haml do
+    haml_tag :i, class: "menu-icon fa fa-#{ChangelogFormatter::CHANGELOG_ICONS[type.to_sym]}"
+  end
+end
+```
+
+View (in haml)
+
+``` haml
+.col-xs-12
+  %p= t(".changelog_intro")
+    - ChangelogFormatter::CHANGELOG_ICONS.each do |type, _|
+      = changelog_icon_for_type(type)
+
+.col-xs-12
+  %table.table-condensed
+    %tbody
+      - for release in @changelog.each
+        %tr
+          %th{colspan: 2}
+            %h3= release.name
+            - if release.date
+              .small.text-right
+                = release.date
+        - for type, text in release.lines
+          %tr
+            / %td.right= type
+            %td= changelog_icon_for_type(type)
+            %td= text
+```
+
+Translation
+
+``` yaml
+nl-NL:
+  changelog:
+    ago: geleden
+    changelog_intro: "We're constantly developing new versions. He're is what we did:"
+    changelog:
+      new: Nieuw
+      fix: Opgeloste bug
+      del: Verwijderd
+      enh: Optimalisatie
+      new: Nieuwe functionaliteit
+```
+
+
+### git-flow
+
+Use this script to generate a release branch, open the CHANGELOG w/ atom
+and copy the date into the pasteboard (OSX)
+
+``` bash
+release is a function
+release ()
+{
+    CURRENT_DATE=$(date "+%Y-%m-%d-%H%M");
+    git flow release start ${CURRENT_DATE};
+    echo "Release ${CURRENT_DATE}" | pbcopy;
+    [ -e CHANGE* ] && atom CHANGE*
+}
+```
+
 
 ## Development
 
@@ -38,4 +114,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
