@@ -1,4 +1,5 @@
 require "changelog_formatter/version"
+require 'active_support/core_ext/object/blank'
 
 class ChangelogFormatter
 
