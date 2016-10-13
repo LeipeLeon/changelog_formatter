@@ -17,10 +17,10 @@ class ChangelogFormatter
     @lines = []
   end
 
-  def self.to_a
+  def self.to_a(changelog_file = 'CHANGELOG')
     releases = []
     release = ChangelogFormatter.new("Next Release")
-    File.open('CHANGELOG') do |f|
+    File.open(changelog_file) do |f|
       f.each_line do |line|
         if line =~ /^Release/
           releases << release unless release.lines.size == 0
